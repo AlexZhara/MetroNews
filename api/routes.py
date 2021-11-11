@@ -2,7 +2,7 @@
 
 from flask import request
 
-from app import app
+from api import app
 
 @app.route('/')
 def hello_world():
