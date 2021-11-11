@@ -1,6 +1,5 @@
-# Database models
+"""Database model, based on the flask_sqlalchemy package"""
 
-from datetime import datetime
 from api import db
 
 class NewsPost(db.Model):
@@ -18,6 +17,7 @@ class NewsPost(db.Model):
 
 	@property
 	def serialize(self):
+		"""For convenient jsonify"""
 		return {
 			'id' : self.id,
 			'headline' : self.headline,

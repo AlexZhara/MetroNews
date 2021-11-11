@@ -1,4 +1,4 @@
-# Routes
+"""Routes"""
 
 from flask import request, jsonify
 from datetime import datetime, timedelta
@@ -12,6 +12,7 @@ def hello_world():
 
 @app.route('/metro/news', methods=['GET'])
 def metro_news():
+	"""Return all DB entries if no argument passed, or entries in the given date period."""
 	date_range = request.args.get('day')
 
 	if date_range is None:

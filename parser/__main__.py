@@ -1,4 +1,10 @@
-#__main__.py
+"""Основной модуль парсера.
+
+Создает базу данных при первом запуске, и заполняет новостями, потом запускает schedule процесс.
+
+При наличии файла app.db в корневой папке, сразу запускает schedule процесс.
+
+"""
 
 import os
 import schedule
@@ -10,12 +16,12 @@ from sqlalchemy.orm import Session
 from parser import Parser
 from models import NewsPost
 
-from pprint import pprint
+SCHEDULER_CONFIG = 5 # Как часто парсится страница, в минутах
 
-SCHEDULER_CONFIG = 5
-
+"""
 def test_task():
 	print('Current timestamp is {}'.format(datetime.now().timestamp()))
+"""
 
 def get_db_filepath():
 	current_dir = os.path.abspath(os.path.dirname(__file__))
@@ -34,7 +40,7 @@ def create_database():
 	print('News page successfully parsed.')
 	
 	with Session(engine) as session:
-		for post in reversed(all_posts):
+		for post in reversed(all_posts): # reversed чтобы id инкрементировались в правильном порядке
 			row = NewsPost(**post)
 			session.add(row)
 		session.commit()
@@ -54,7 +60,7 @@ def scheduled_parse():
 		count = session.query(NewsPost).filter(NewsPost.time_posted == latest_post_time).count()
 	
 	if count == 1:
-		print('This post already exists in the database. Will check again in 10 minutes.')
+		print('This post already exists in the database. Will check again in {} minutes.'.format(SCHEDULER_CONFIG))
 	else:
 		print('A new post has appeared! Capturing into the database...')
 		latest_post = all_posts[0]
@@ -63,7 +69,7 @@ def scheduled_parse():
 			session.add(row)
 			session.commit()
 		print('Successfully saved the post. Now checking if the next post already exists...')
-		# Я понимаю, что я здесь нарушаю DRY, да и в принципе это точно это можно сделать лучше.
+		# Я понимаю, что я здесь нарушаю DRY, да и в принципе это точно можно сделать лучше.
 		# И это не будет работать, если три+ новости в течение 10 минут
 		# Но у меня уже голова не варит, и я видел только один edge case, где две новости в течение 10 минут.
 		# Если успею, утром пересмотрю.
@@ -81,9 +87,6 @@ def scheduled_parse():
 				row = NewsPost(**latest_post)
 				session.add(row)
 				session.commit()
-
-
-
 
 
 if __name__ == '__main__':
