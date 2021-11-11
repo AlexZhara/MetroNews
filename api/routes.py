@@ -1,8 +1,10 @@
 # Routes
 
-from flask import request
+from flask import request, jsonify
+from datetime import datetime, timedelta
 
 from api import app
+from api.models import NewsPost
 
 @app.route('/')
 def hello_world():
@@ -10,8 +12,13 @@ def hello_world():
 
 @app.route('/metro/news', methods=['GET'])
 def metro_news():
-	if request.args.get != None:
-		date_range = request.args.get('day')
-		return 'Entries from the date range of {}'.format(date_range)
+	date_range = request.args.get('day')
+
+	if date_range is None:
+		news_posts = NewsPost.query.order_by(NewsPost.time_posted).all()
+		return jsonify(data=[i.serialize for i in news_posts])
 	else:
-		return 'All the entries'
+		today = datetime.now()
+		past_date = str(today - timedelta(days=int(date_range)))
+		news_posts = NewsPost.query.filter(NewsPost.time_posted >= past_date).order_by(NewsPost.time_posted)
+		return jsonify(data=[i.serialize for i in news_posts])

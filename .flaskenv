@@ -1,0 +1,2 @@
+FLASK_APP=metronews.py
+FLASK_ENV=development
