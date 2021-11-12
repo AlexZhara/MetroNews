@@ -20,7 +20,7 @@
 
 ## Инструкция по запуску
 1. Клонировать репозиторий и перейти в корневую папку `MetroNews` в терминале
-2. Установить виртуальную среду: `$ python3 -m venv env`
+2. Установить виртуальную среду: `$ python3 -m venv env` (или `python`, если там Python 3)
 3. Активировать виртуальную среду.
     - На macOS: `$ source env/bin/activate`
     - На Windows: `$ env\Scripts\activate`
