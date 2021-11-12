@@ -20,6 +20,6 @@ def metro_news():
 		return jsonify(data=[i.serialize for i in news_posts])
 	else:
 		today = datetime.now()
-		past_date = str(today - timedelta(days=int(date_range)))
+		past_date = str(today - timedelta(days=int(date_range)-1))
 		news_posts = NewsPost.query.filter(NewsPost.time_posted >= past_date).order_by(NewsPost.time_posted)
 		return jsonify(data=[i.serialize for i in news_posts])
