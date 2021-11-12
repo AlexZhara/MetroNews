@@ -6,10 +6,30 @@ import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 
-locale.setlocale(locale.LC_ALL, 'ru_RU') # Needed for datetime to parse Russian month names 
-
 def replace_xa0(string):
 	return string.replace(u'\xa0', u' ')
+
+def convert_date_ru_en(date_str):
+	ru_to_en = {
+		'января' : 'january',
+		'февраля' : 'february',
+		'марта' : 'march',
+		'апреля' : 'april',
+		'мая' : 'may',
+		'июня' : 'june',
+		'июля' : 'july',
+		'августа' : 'august',
+		'сентября' : 'september',
+		'октября' : 'october',
+		'ноября' : 'november',
+		'декабря' : 'december',
+	}
+	str_ru = date_str.split(' ')
+	month_ru = str_ru[1][:-1]
+	month_eng = ru_to_en[month_ru]
+	str_en = str_ru[0] + ' {}, '.format(month_eng) + str_ru[2]
+	return str_en
+
 
 class Parser:
 	URL = 'https://mosmetro.ru/news/'
@@ -51,6 +71,7 @@ class Parser:
 			img_url = re.search('\(([^)]+)', img['style']).group(1) # RE to get the URL from between parentheses
 
 			time_str = post.find('div', class_='news-card__date').get_text()
+			time_str = convert_date_ru_en(time_str)
 			date = datetime.strptime(time_str, '%d %B, %H:%M').replace(year=datetime.now().year)
 
 			news_post = {
