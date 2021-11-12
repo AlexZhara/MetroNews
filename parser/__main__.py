@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from parser import Parser
 from models import NewsPost
 
-SCHEDULER_CONFIG = 5 # Как часто парсится страница, в минутах
+SCHEDULER_CONFIG = 10 # Как часто парсится страница, в минутах
 
 """
 def test_task():
